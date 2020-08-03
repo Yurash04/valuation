@@ -1,0 +1,46 @@
+<div class="container col span-1-of-4 search">
+    <h3>Pick a company</h3>
+    <div class="row row-1">
+        <div class="col span-1-of-4 icon">
+            <i class="material-icons">list</i>
+        </div>
+        <div class="col span-3-of-4">
+            <div class="sector">
+                <span>Sector</span>
+            </div>
+            <div class="select-2">
+                <div class="select">
+                    <select name="search_categories" class="select-sector" (input)="sectorHandler($event)">
+                        <option value="Real Estate">Real Estate</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Energy">Energy</option>
+                        <option value="Financial">Financial</option>
+                        <option value="Industrials">Industrials</option>
+                        <option value="cyclical">Cons. cyclical</option>
+                        <option value="Services">Comm. Services</option>
+                        <option value="Materials">Basic Materials</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Defensive">Cons. Defensive</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row row-2">
+        <div class="col span-1-of-4 icon">
+            <i class="material-icons">trending_up</i>
+        </div>
+        <div class="col span-3-of-4">
+            <div class="sector">
+                <span>Ticker is: {{ ticker }}</span>
+            </div>
+            <div class="ticker">
+                <input class="pick-ticker" type="text" (input)="tickerHandler($event)">
+            </div>
+        </div>
+    </div>
+    <div class="row submit">
+       <button class="button" (click)="newTicker()">Submit</button>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+.valuation-list {
+  /* list-style: none; */
+  font-size: 100%;
+  padding-left: 30px;
+}
+
+.valuation-list li {
+  padding: 12px 5px 12px 0px;
+}
+

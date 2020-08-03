@@ -1,0 +1,9 @@
+<div class="container col span-1-of-4">
+    <h3>Your valuation of {{ ticker }}</h3>
+    <ul class="valuation-list">
+        <li>Av. Industrys P/E = {{ industryPE }} </li>
+        <li>{{ ticker }}'s earnings = ${{ earnings }} mln </li>
+        <li>Market Cap = ${{ marketCap }} mln</li>
+        <li><strong>Fair value = ${{ calcFairValue() }} mln</strong></li>
+    </ul>
+</div>
