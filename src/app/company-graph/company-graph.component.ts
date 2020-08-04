@@ -48,9 +48,9 @@ export class CompanyGraphComponent implements OnInit, DoCheck, AfterViewInit {
 
   ngDoCheck() {
     if (this.ticker === 'default ticker' || this.ticker === this.tickerPrev) {
-      console.log('NGDOCHECK = FALSE')
+      // console.log('NGDOCHECK = FALSE')
     } else {
-      console.log('NGDOCHECK = TRUE')
+      // console.log('NGDOCHECK = TRUE')
       new TradingView.widget({
         "width": 580,
         "height": 190,

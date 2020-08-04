@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from  'node_modules/chart.js';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-bubble-chart',
@@ -8,41 +9,40 @@ import { Chart } from  'node_modules/chart.js';
 })
 export class BubbleChartComponent implements OnInit {
 
+  url2 = 'https://script.google.com/macros/s/AKfycbysVaQUXohiHfW18V-mZV8AwYMjfI_E1S7HYyculA7m0A-N0BA/exec';
+
   sector: string;
+  data: Array<number> = [];
 
-  sectorData = [
-    {
-        "financial": "0.44",
-        "utilities": "21.84",
-        "communicationServices": "22.75",
-        "basicMaterials": "28.96",
-        "energy": "25.95",
-        "industrials": "27.20",
-        "consumerDefensive": "28.00",
-        "healthcare": "29.60",
-        "realEstate": "32.68",
-        "technology": "36.05",
-        "consumerCyclical": "36.35"
-    }
-  ]
-
-  data = [
-    this.sectorData[0]['financial'], 
-    this.sectorData[0]['utilities'], 
-    this.sectorData[0]['communicationServices'], 
-    this.sectorData[0]['basicMaterials'], 
-    this.sectorData[0]['energy'], 
-    this.sectorData[0]['industrials'], 
-    this.sectorData[0]['consumerDefensive'], 
-    this.sectorData[0]['healthcare'], 
-    this.sectorData[0]['realEstate'], 
-    this.sectorData[0]['technology'], 
-    this.sectorData[0]['consumerCyclical']
-  ];
+  // sectorData = [
+  //   {
+  //     financial: 1,
+  //     utilities: 1,
+  //     communicationServices: 1,
+  //     basicMaterials: 1,
+  //     energy: 1,
+  //     industrials: 1,
+  //     consumerDefensive: 1,
+  //     healthcare: 1,
+  //     realEstate: 1,
+  //     technology: 1,
+  //     consumerCyclical: 1
+  //   }
+  // ]
  
-  constructor() { }
+  constructor(public httpClient: HttpClient) { }
 
-  ngOnInit() {
+  sendGetRequest2(){
+    let arr: Array<string>;
+    this.httpClient.get(this.url2).subscribe((res)=>{
+      arr = res['user'];
+      for (let i = 0; i < arr.length; i++) {
+        this.data.push(parseInt(arr[i]['name']));
+      }
+    });
+  }
+
+  showChart() {
     let myChart = new Chart('myChart', {
       type: 'bar',
       data: {
@@ -62,9 +62,6 @@ export class BubbleChartComponent implements OnInit {
                   'rgb(8, 111, 196, 0.4)',
                   'rgb(7, 97, 171, 0.3)',
                   'rgb(6, 84, 147, 0.3)'
-                  
-                  
-                  
               ],
               borderColor: [
                 'rgb(157, 209, 251, 1)',
@@ -94,5 +91,15 @@ export class BubbleChartComponent implements OnInit {
       }
   });
   }
+
+  ngOnInit() {
+    this.sendGetRequest2()
+    console.log(this.data);
+    setTimeout(() => {
+      this.showChart()
+    }, 3000);
+  }
+   
+
 
 }
