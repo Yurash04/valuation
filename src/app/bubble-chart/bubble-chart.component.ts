@@ -8,7 +8,37 @@ import { Chart } from  'node_modules/chart.js';
 })
 export class BubbleChartComponent implements OnInit {
 
-  data = [31, 34, 31, 51, 12, 18, 32, 24, 28, 31, 21.];
+  sector: string;
+
+  sectorData = [
+    {
+        "financial": "0.44",
+        "utilities": "21.84",
+        "communicationServices": "22.75",
+        "basicMaterials": "28.96",
+        "energy": "25.95",
+        "industrials": "27.20",
+        "consumerDefensive": "28.00",
+        "healthcare": "29.60",
+        "realEstate": "32.68",
+        "technology": "36.05",
+        "consumerCyclical": "36.35"
+    }
+  ]
+
+  data = [
+    this.sectorData[0]['financial'], 
+    this.sectorData[0]['utilities'], 
+    this.sectorData[0]['communicationServices'], 
+    this.sectorData[0]['basicMaterials'], 
+    this.sectorData[0]['energy'], 
+    this.sectorData[0]['industrials'], 
+    this.sectorData[0]['consumerDefensive'], 
+    this.sectorData[0]['healthcare'], 
+    this.sectorData[0]['realEstate'], 
+    this.sectorData[0]['technology'], 
+    this.sectorData[0]['consumerCyclical']
+  ];
  
   constructor() { }
 
@@ -16,7 +46,7 @@ export class BubbleChartComponent implements OnInit {
     let myChart = new Chart('myChart', {
       type: 'bar',
       data: {
-          labels: ['R. E.', 'Tech.', 'Energy', 'Fin.', 'Ind.', 'Cycl.', 'Serv.', 'Mater.', 'Health', 'Ut.', 'Defens.'],
+          labels: ['Fin.', 'Ut.', 'Serv.', 'Mater.', 'Energy', 'Ind.', 'Defens.', 'Health', 'R. E.', 'Tech.', 'Cycl.', ],
           datasets: [{
               label: 'Average P/E by industry',
               data: this.data,

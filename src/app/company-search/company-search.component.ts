@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-import { CompanyGraphComponent } from '../company-graph/company-graph.component'
+// import { CompanyGraphComponent } from '../company-graph/company-graph.component'
 
 @Component({
   selector: 'app-company-search',
@@ -17,6 +17,7 @@ export class CompanySearchComponent implements OnInit {
 
   ngOnInit() {
     this.data.currentMessage.subscribe(ticker => this.ticker = ticker)
+    this.data.currentMessage.subscribe(sector => this.sector = sector)
   }
 
   sectorHandler(event:any) {
@@ -31,6 +32,10 @@ export class CompanySearchComponent implements OnInit {
 
   newTicker() {
     this.data.changeMessage(this.ticker);
+  }
+
+  newSector() {
+    this.data.changeSector(this.sector);
   }
 
 }

@@ -9,13 +9,24 @@ import { DataService } from '../data.service';
 })
 export class CompanyDataComponent implements OnInit {
 
-  marketCap: number = 277000;
-  earnings: number = 368;
-  companyPE: number = 736;
+  companyData = [
+    {
+        "tick": "TSLA",
+        "pe": 764.16,
+        "marketcap": 276747124500,
+        "eps": 1.94,
+        "shares": 186362000,
+        "earnings": 361542280
+    }
+  ]
+
+  marketCap: number = Math.round(this.companyData[0]['marketcap'] / 1000000);
+  earnings: number = Math.round(this.companyData[0]['earnings'] / 1000000);
+  companyPE: number = this.companyData[0]['pe'];
   industryPE: number = 34.93;
   fairValue: number = null;
 
-  ticker: string;
+  ticker: string = this.companyData[0]['tick'];
   
   constructor(private data: DataService) { }
 
@@ -25,7 +36,7 @@ export class CompanyDataComponent implements OnInit {
   }
 
   calcFairValue() {
-    this.fairValue = (this.earnings * this.industryPE);
+    this.fairValue = Math.round(this.earnings * this.industryPE);
     return this.fairValue;
   }
 
