@@ -97,7 +97,7 @@ export class BubbleChartComponent implements OnInit {
     console.log(this.data);
     setTimeout(() => {
       this.showChart()
-    }, 3000);
+    }, 4000);
   }
    
 
