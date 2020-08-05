@@ -52,4 +52,35 @@ export class CompanySearchComponent implements OnInit {
     this.data.changeSector(this.sector);
   }
 
+  postToGoogle() {
+    var field1 = $("#sector option:selected").text();
+    var field2 = $("#tickerField").val();
+    
+
+    if(field1 == ""){
+    alert('Please Fill The Ticker');
+    document.getElementById("tickerField").focus();
+    return false;
+    }
+
+    // if(field3 == "" || field3.length > 10 || field3.length < 10){
+    // alert('Please Fill Your Mobile Number');
+    // document.getElementById("mobField").focus();
+    // return false;
+    // }
+
+    $.ajax({
+      url: "https://docs.google.com/forms/d/e/1FAIpQLSff_pw2D7wYSLTpOsKexdSZVo3GfJvmtU1CbHtXHrCUHkUC2Q/formResponse?",
+      data: {"entry.264375094": field1, "entry.895664410": field2},
+      type: "POST",
+      dataType: "xml",
+      success: function(d) { $('#success-msg').show() },
+      error: function(x, y, z) { 
+        // $('#form').hide();
+        console.log('Something went wrong!')
+      }
+    });
+    return false;
+  }
 }
+
