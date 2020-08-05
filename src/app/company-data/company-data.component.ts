@@ -23,10 +23,10 @@ export class CompanyDataComponent implements OnInit {
     "earnings": 361542280
   }
 
-  marketCap: number = Math.round(this.companyData['marketcap'] / 1000000);
+  companyPE: number;
+  marketCap: number;
   earnings: number = Math.round(this.companyData['earnings'] / 1000000);
-  companyPE: number = this.companyData['pe'];
-  industryPE: number = 34.93;
+  industryPE: number;
   fairValue: number = null;
 
   ticker: string = this.companyData['tick'];
@@ -34,8 +34,7 @@ export class CompanyDataComponent implements OnInit {
   constructor(private data: DataService, public httpClient: HttpClient) { }
 
   ngOnInit()  {
-    console.log('company data oninit was called!')
-    this.data.currentMessage.subscribe(ticker => this.ticker = ticker)
+    this.data.currentTicker.subscribe(ticker => this.ticker = ticker)
     // this.loadData();
   }
 

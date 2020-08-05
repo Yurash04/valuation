@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DoCheck } from '@angular/core';
+import { DataService } from '../data.service';
 import { Chart } from  'node_modules/chart.js';
 import { HttpClient } from '@angular/common/http';
 
@@ -7,12 +8,23 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './bubble-chart.component.html',
   styleUrls: ['./bubble-chart.component.css']
 })
-export class BubbleChartComponent implements OnInit {
+export class BubbleChartComponent implements OnInit, DoCheck {
+
+  sector: string;
+  ticker: string = 'AAPL';
+  name: string;
+  cpe: number;
+  marketCap: number;
+  earnings: number;
+  spe: number;
+  arrObj: Array<object>;
+  chartData: Array<number> = [];
+  chartCounter: number = 0;
+
+  constructor(private data: DataService, public httpClient: HttpClient) { }
 
   url2 = 'https://script.google.com/macros/s/AKfycbysVaQUXohiHfW18V-mZV8AwYMjfI_E1S7HYyculA7m0A-N0BA/exec';
 
-  sector: string;
-  data: Array<number> = [];
 
   // sectorData = [
   //   {
@@ -29,16 +41,19 @@ export class BubbleChartComponent implements OnInit {
   //     consumerCyclical: 1
   //   }
   // ]
- 
-  constructor(public httpClient: HttpClient) { }
+
+  newSpe() {
+    this.data.changeSpe(this.spe);
+  }
 
   sendGetRequest2(){
-    let arr: Array<string>;
     this.httpClient.get(this.url2).subscribe((res)=>{
-      arr = res['user'];
-      for (let i = 0; i < arr.length; i++) {
-        this.data.push(parseInt(arr[i]['name']));
+      this.arrObj = res['user'];
+      console.log(this.arrObj);
+      for (let i = 0; i < this.arrObj.length; i++) {
+        this.chartData.push(parseInt(this.arrObj[i]['name']));
       }
+      this.newSpe();
     });
   }
 
@@ -49,7 +64,7 @@ export class BubbleChartComponent implements OnInit {
           labels: ['Fin.', 'Ut.', 'Serv.', 'Mater.', 'Energy', 'Ind.', 'Defens.', 'Health', 'R. E.', 'Tech.', 'Cycl.', ],
           datasets: [{
               label: 'Average P/E by industry',
-              data: this.data,
+              data: this.chartData,
               backgroundColor: [
                   'rgb(157, 209, 251, 0.4)',
                   'rgb(133, 197, 250, 0.4)',
@@ -92,14 +107,38 @@ export class BubbleChartComponent implements OnInit {
   });
   }
 
+  updateChart() {
+
+
+    // rgb(250, 145, 137, 0.3)
+    // rgb(250, 145, 137, 1)
+
+  }
+
   ngOnInit() {
+    this.data.currentTicker.subscribe(ticker => this.ticker = ticker)
+    this.data.currentName.subscribe(name => this.name = name)
+    this.data.currentSector.subscribe(sector => this.sector = sector)
+    this.data.currentcpe.subscribe(cpe => this.cpe = cpe)
+    this.data.currentMarketCap.subscribe(marketCap => this.marketCap = marketCap)
+    this.data.currentEarnings.subscribe(earnings => this.earnings = earnings)
+    this.data.currentspe.subscribe(spe => this.spe = spe)
+
     this.sendGetRequest2()
-    console.log(this.data);
     setTimeout(() => {
       this.showChart()
     }, 4000);
   }
-   
 
-
+  ngDoCheck() {
+    if (this.sector !== 'sector') {
+      for (this.chartCounter = 0; this.chartCounter < this.arrObj.length; this.chartCounter++) {
+        if (this.arrObj[this.chartCounter]['id'] === this.sector) {
+          this.spe = this.arrObj[this.chartCounter]['name']
+          this.newSpe();
+          this.updateChart();
+        }
+      }
+    }
+  }
 }

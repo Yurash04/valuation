@@ -17,7 +17,7 @@ export class IndustryChartComponent implements OnInit {
 
   ngOnInit()  {
     console.log()
-    this.data.currentMessage.subscribe(ticker => this.ticker = ticker)
+    this.data.currentTicker.subscribe(ticker => this.ticker = ticker)
   }
 
   ngAfterViewInit() {

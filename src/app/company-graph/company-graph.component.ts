@@ -14,17 +14,13 @@ declare let TradingView: any;
 
 export class CompanyGraphComponent implements OnInit, DoCheck, AfterViewInit {
 
-  changeDetected: boolean = false;
-  changeCounter: number = 0;
   tickerPrev: string = '';
   ticker: string = '';
-
-  // ticker: string = 'TSLA';
 
   constructor(private data: DataService) { }
 
   ngOnInit() {
-    this.data.currentMessage.subscribe(ticker => this.ticker = ticker)
+    this.data.currentTicker.subscribe(ticker => this.ticker = ticker)
   }
 
   ngAfterViewInit() {

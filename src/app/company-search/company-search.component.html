@@ -1,53 +1,29 @@
 <div class="container col span-1-of-4 search">
     <h3>Pick a company</h3>
-    <div class="row row-1">
-        <div class="col span-1-of-4 icon">
-            <i class="material-icons">list</i>
-        </div>
-        <div class="col span-3-of-4">
-            <div class="sector">
-                <span>Sector</span>
-            </div>
-            <div class="select-2">
-                <form id="form" target="_self" onsubmit="return postToGoogle();" action="" autocomplete="off">
-                    <div class="select">
-                        <select id="sector" name="entry.264375094" placeholder="Select Sector" class="select-sector" required>
-                            <option value="Real Estate">Real Estate</option>
-                            <option value="Technology">Technology</option>
-                            <option value="Energy">Energy</option>
-                            <option value="Financial">Financial</option>
-                            <option value="Industrials">Industrials</option>
-                            <option value="Cyclical">Cons. cyclical</option>
-                            <option value="Services">Comm. Services</option>
-                            <option value="Materials">Basic Materials</option>
-                            <option value="Healthcare">Healthcare</option>
-                            <option value="Utilities">Utilities</option>
-                            <option value="Defensive">Cons. Defensive</option>
-                        </select>
-                        <input id="tickerField" name="entry.895664410" placeholder="Pick a ticker" type="text" required>
-                        <button id="send" class="button" type="submit" (click)="postToGoogle()">Submit</button>
-                    </div>
-                </form>
-                <h3 id="success-msg" style="text-align: center !important; margin-top:190px !important; display:none; color:#fff"> Your Request has been posted to Google Spreadsheet</h3>
-            </div>
-        </div>
-    </div>
-    <div class="row row-2">
-        <div class="col span-1-of-4 icon">
-            <i class="material-icons">trending_up</i>
-        </div>
-        <div class="col span-3-of-4">
-            <div class="sector">
-                <span>Ticker is: {{ ticker }}</span>
-            </div>
-            <!-- <div class="ticker">
-                
-            </div> -->
-        </div>
-    </div>
-    <!-- <div class="row submit">
-       
-    </div> -->
+        <i class="material-icons icon">list</i>
+        <form id="form" target="_self" onsubmit="return postToGoogle();" action="" autocomplete="off">
+            <label for="sector">Sector</label>
+            <select id="sector" name="entry.264375094" placeholder="Select Sector" class="select-sector" required>
+                <option value="Real Estate">Real Estate</option>
+                <option value="Technology">Technology</option>
+                <option value="Energy">Energy</option>
+                <option value="Financial">Financial</option>
+                <option value="Industrials">Industrials</option>
+                <option value="Cyclical">Cons. cyclical</option>
+                <option value="Services">Comm. Services</option>
+                <option value="Materials">Basic Materials</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Defensive">Cons. Defensive</option>
+            </select>
+            <div>
+                <i class="material-icons">trending_up</i>
+            </div> 
+            <label for="tickerField">Ticker</label>
+            <input id="tickerField" name="entry.895664410" placeholder="Pick a ticker" type="text" required>
+            <button id="send" class="button" type="submit" (click)="postToGoogle()">Submit</button>
+        </form>
+        <h3 id="success-msg" style="text-align: center !important; margin-top:190px !important; display:none; color:#fff"> Your Request has been posted to Google Spreadsheet</h3>
 </div>
 
 
