@@ -10,20 +10,27 @@
     -o-border-radius: 10px;
 }
 
+.heading {
+    padding: 5px;
+    display: inline-block;
+}
+
 h1 {
     display: inline-block;
     font-size: 170%;
+    line-height: 40px;
 }
 
 .menu-block {
     float: right;
-    line-height: 30px;
     margin-right: 20px;
+    line-height: 40px;
 }
 
 .history:link,
 .history:visited {
     text-decoration: none;
+    font-size: 110%;
     font-weight: 500;
     padding: 5px 15px;
     border-radius: 20px;

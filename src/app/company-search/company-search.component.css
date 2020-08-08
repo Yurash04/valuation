@@ -1,67 +1,69 @@
 .search { margin-left: 0; }
 
+.input-block {
+    text-align: center;
+}
+
 .icon {
-    margin-left: 0;
+    border: 1px dashed #ccc;
+
     height: 45px;
-    line-height: 100%;
-}
-
-.sector { margin: 2px; }
-
-.row-1 { 
-    margin-bottom: 10px;
-}
-
-.icon {
-    line-height: 60px;
+    line-height: 20px;
 }
 
 .material-icons {
-    font-size: 200%;
-    line-height: 60px;
-    margin-left: 15px;
+
+    font-size: 250%;
+    line-height: 40px;
+    text-align: center;
+    margin: 0 auto;
+    /* padding: 4px; */
 }
 
-.sector {
-    margin-bottom: 5px;
-}
-
-.select-sector {
-    padding: 2px 2px 2px 0;
+.ticker-icon {
+    text-align: center;
+    width: 90%;
     font-size: 80%;
-    color: #343540;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -ms-border-radius: 10px;
-    -o-border-radius: 10px;
+    margin: 0 auto;
+    padding: 4px;
 }
 
-.row-2 { 
-    margin-bottom: 10px; 
+.ticker-label {
+    width: 90%;
+    margin: 5px auto;
+    padding: 4px;
+
 }
 
-.pick-ticker {
-    padding: 3px 3px 3px 5px;
-    width: 142px;
+.ticker-input {
+    width: 90%;
+    margin: 5px auto;
+    padding: 4px;
+
+}
+
+#tickerField {
+    line-height: 30px;
+    width: 133.5px;
     font-size: 80%;
-    border: 1px solid #343540;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -ms-border-radius: 10px;
-    -o-border-radius: 10px;
+    text-align: center;
+}
+
+.ticker-button {
+    width: 90%;
+    margin: 20px auto 5px;
+    padding: 4px;
 }
 
 .submit { text-align: center; }
 
 .button {
     padding: 7px 45px;
-    margin-top: 5px;
     font-weight: 300;
+    font-size: 90%;
     text-decoration: none;
-    border: 1px solid #00018b;
-    background-color: #00018b;
+    border: 1px solid #13aaea;
+    background-color: #13aaea;
     color: white;
     border-radius: 20px;
     transition: background-color 0.2s, border 0.2s;
@@ -69,14 +71,14 @@
     -moz-border-radius: 20px;
     -ms-border-radius: 20px;
     -o-border-radius: 20px;
-    -webkit-transition:;
-    -moz-transition:;
-    -ms-transition:;
-    -o-transition:;
+    -webkit-transition: background-color 0.2s, border 0.2s;
+    -moz-transition: background-color 0.2s, border 0.2s;
+    -ms-transition: background-color 0.2s, border 0.2s;
+    -o-transition: background-color 0.2s, border 0.2s;
 }
 
 .button:hover,
 .button:active {
-    border: 1px solid #000061;
-    background-color: #000061;
+    border: 1px solid #0d77a4;
+    background-color: #0d77a4;
 }

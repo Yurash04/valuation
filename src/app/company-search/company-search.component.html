@@ -1,42 +1,17 @@
-<div class="container col span-1-of-4 search">
+<div class="container col span-1-of-4 search input-block">
     <h3>Pick a company</h3>
-        <i class="material-icons icon">list</i>
-        <form id="form" target="_self" onsubmit="return postToGoogle();" action="" autocomplete="off">
-            <label for="sector">Sector</label>
-            <select id="sector" name="entry.264375094" placeholder="Select Sector" class="select-sector" required>
-                <option value="Real Estate">Real Estate</option>
-                <option value="Technology">Technology</option>
-                <option value="Energy">Energy</option>
-                <option value="Financial">Financial</option>
-                <option value="Industrials">Industrials</option>
-                <option value="Cyclical">Cons. cyclical</option>
-                <option value="Services">Comm. Services</option>
-                <option value="Materials">Basic Materials</option>
-                <option value="Healthcare">Healthcare</option>
-                <option value="Utilities">Utilities</option>
-                <option value="Defensive">Cons. Defensive</option>
-            </select>
-            <div>
+        <form id="form" target="_self" onsubmit="" action="" autocomplete="off">
+            <div class="ticker-icon">
                 <i class="material-icons">trending_up</i>
             </div> 
-            <label for="tickerField">Ticker</label>
-            <input id="tickerField" name="entry.895664410" placeholder="Pick a ticker" type="text" required>
-            <button id="send" class="button" type="submit" (click)="postToGoogle()">Submit</button>
+            <div class="ticker-label">
+                <label for="tickerField">Enter Ticker</label>
+            </div>
+            <div class="ticker-input">
+                <input id="tickerField" name="entry.895664410" placeholder="e.g. TSLA" type="text" required>
+            </div>
+            <div class="ticker-button">
+                <button id="send" class="button" type="submit" (click)="sendGetRequest()">Submit</button>
+            </div>
         </form>
-        <h3 id="success-msg" style="text-align: center !important; margin-top:190px !important; display:none; color:#fff"> Your Request has been posted to Google Spreadsheet</h3>
 </div>
-
-
-<!-- <form id="form" target="_self" onsubmit="return postToGoogle();" action="" autocomplete="off"> 
-        <input id="nameField" name="entry.2008660880" placeholder="Enter your name" type="text" required> 
-        <input id="emailField" name="entry.1460631936" placeholder="Enter your email" type="email" required> 
-        <input id="mobField" name="entry.904964149" placeholder="Enter your 10 Digit Phone Number" type="text" pattern="^\d{10}$" required>  
-        <select id="cinema" name="entry.1878256062" placeholder="Select Cinema" required>
-            <option value="">Why wanTED Talks Youtube Channel?</option>
-            <option value="City: Delhi, Cinema: PVR Logix City Centre IMAX, Noida">Time Saving Fast Track Tutorials</option>
-            <option value="City:Bengaluru  Cinema:Cinepolis IMAX Forum Shantiniketan">Provide Code for reference</option>
-            <option value="City:Chennai Cinema:SPI Palazo The Forum Vijaya Mall, Vadapalani">Instant Replies of Comments</option>
-            <option value="City:Pune Cinema:Cinepolis Westend Mall, Pune">Latest Code Updates</option> 
-        </select> 
-    <button id="send" type="submit" class="common_btn">Register Now</button>
-</form> -->

@@ -13,6 +13,9 @@ export class DataService {
   private sectorSource = new BehaviorSubject<string>('sector');
   currentSector = this.sectorSource.asObservable();
 
+  private prevSectorSource = new BehaviorSubject<boolean>(false);
+  currentPrevSector = this.prevSectorSource.asObservable();
+
   private cpeSource = new BehaviorSubject<number>(1);
   currentcpe = this.cpeSource.asObservable();
 
@@ -21,7 +24,7 @@ export class DataService {
 
   private earningsSource = new BehaviorSubject<number>(1);
   currentEarnings = this.earningsSource.asObservable();
-  
+
   private speSource = new BehaviorSubject<number>(1);
   currentspe = this.speSource.asObservable();
 
@@ -37,6 +40,10 @@ export class DataService {
 
   changeSector(sector: string) {
     this.sectorSource.next(sector);
+  }
+
+  changePrevSector(prevSector: boolean) {
+    this.prevSectorSource.next(prevSector);
   }
 
   changeCpe(cpe: number){

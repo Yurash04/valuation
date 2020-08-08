@@ -29,7 +29,7 @@ export class CompanyDataComponent implements OnInit {
   industryPE: number;
   fairValue: number = null;
 
-  ticker: string = this.companyData['tick'];
+  ticker: string;
   
   constructor(private data: DataService, public httpClient: HttpClient) { }
 
