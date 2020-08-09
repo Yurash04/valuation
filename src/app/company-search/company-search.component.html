@@ -1,6 +1,6 @@
 <div class="container col span-1-of-4 search input-block">
     <h3>Pick a company</h3>
-        <form id="form" target="_self" onsubmit="" action="" autocomplete="off">
+        <!-- <form id="form" target="_self" onsubmit="" action="" autocomplete="off"> -->
             <div class="ticker-icon">
                 <i class="material-icons">trending_up</i>
             </div> 
@@ -8,10 +8,10 @@
                 <label for="tickerField">Enter Ticker</label>
             </div>
             <div class="ticker-input">
-                <input id="tickerField" name="entry.895664410" placeholder="e.g. TSLA" type="text" required>
+                <input id="tickerField" (keyup)="updateTicker($event)" name="entry.895664410" placeholder="e.g. TSLA" type="text" required>
             </div>
             <div class="ticker-button">
-                <button id="send" class="button" type="submit" (click)="sendGetRequest()">Submit</button>
+                <button id="send" class="button" type="submit" (click)="globalUpdate()">Submit</button>
             </div>
-        </form>
+        <!-- </form> -->
 </div>

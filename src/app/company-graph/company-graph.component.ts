@@ -16,6 +16,7 @@ export class CompanyGraphComponent implements OnInit, DoCheck, AfterViewInit {
 
   tickerPrev: string = '';
   ticker: string = '';
+  exchange: string;
 
   constructor(private data: DataService) { }
 
@@ -25,8 +26,9 @@ export class CompanyGraphComponent implements OnInit, DoCheck, AfterViewInit {
 
   ngAfterViewInit() {
     new TradingView.widget({
-      "width": 580,
-      "height": 190,
+      // "width": 580,
+      // "height": 190,
+      "autosize": true,
       "symbol": "NASDAQ:AAPL",
       "interval": "D",
       "timezone": "America/Los_Angeles",
@@ -44,12 +46,11 @@ export class CompanyGraphComponent implements OnInit, DoCheck, AfterViewInit {
 
   ngDoCheck() {
     if (this.ticker === 'default ticker' || this.ticker === this.tickerPrev) {
-      // console.log('NGDOCHECK = FALSE')
     } else {
-      // console.log('NGDOCHECK = TRUE')
       new TradingView.widget({
-        "width": 580,
-        "height": 190,
+        // "width": 580,
+        // "height": 190,
+        "autosize": true,
         "symbol": "NASDAQ:" + this.ticker,
         "interval": "D",
         "timezone": "America/Los_Angeles",

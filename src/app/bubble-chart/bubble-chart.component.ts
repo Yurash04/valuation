@@ -130,6 +130,25 @@ export class BubbleChartComponent implements OnInit
 
   }
 
+  getYields() {
+    var data = null;
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === this.DONE) {
+        console.log(this.responseText);
+      }
+});
+
+xhr.open("GET", "https://alpha-vantage.p.rapidapi.com/query?function=SECTOR");
+xhr.setRequestHeader("x-rapidapi-host", "alpha-vantage.p.rapidapi.com");
+xhr.setRequestHeader("x-rapidapi-key", "72f75c9d27msh668692a47ef8476p1602eejsn860fa5e11005");
+
+xhr.send(data);
+  }
+
   ngOnInit() {
     console.log('ng on init was called')
     this.data.currentTicker.subscribe(ticker => this.ticker = ticker)
@@ -141,25 +160,8 @@ export class BubbleChartComponent implements OnInit
     this.data.currentEarnings.subscribe(earnings => this.earnings = earnings)
     this.data.currentspe.subscribe(spe => this.spe = spe)
 
-    this.sendGetRequest2()
-    this.showChart()
+    this.sendGetRequest2();
+    this.showChart();
+    // this.getYields();
   }
-
-  // ngAfterViewChecked() {
-  //   setTimeout(() => {
-  //     if (this.sector !== 'sector' || this.prevSector) {
-  //       for (this.chartCounter = 0; this.chartCounter < this.arrObj.length; this.chartCounter++) {
-  //         if (this.arrObj[this.chartCounter]['id'] === this.sector) {
-  //           this.spe = this.arrObj[this.chartCounter]['name']
-  //           this.newSpe();
-  //           this.updateChart();
-  //           this.prevSector = false;
-  //           console.log('LOL :)')
-  //         }
-  //       }
-  //     }
-  //   }, 5000);
-  //   console.log('ng afterviewchecked was called')
-  //   console.log(this.prevSector);
-  // }
 }

@@ -24,8 +24,9 @@ export class IndustryChartComponent implements OnInit {
       new TradingView.widget(
       {
       "container_id": "sector-chart",
-      "width": 580,
-      "height": 190,
+      "autosize": true,
+      // "width": 580,
+      // "height": 190,
       "symbol": "CURRENCYCOM:US500",
       "interval": "D",
       "timezone": "Etc/UTC",
