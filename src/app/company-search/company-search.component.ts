@@ -18,29 +18,17 @@ export class CompanySearchComponent implements OnInit {
   name: string;
   sector: string;
   exchange: string;
-  cev: number;
   cevebitda: number;
-  cebitda: number = this.cev / this.cevebitda;
-  cpe: number;
-  cpbv: number;
-  lastClose: number;
   marketCap: number;
-  earnings: number;
-  spe: number;
+
+  // Competirors tickers
+  competitorsTickers = [];
+  competitors: Array<object> = [];
 
   yahooProfile = 'https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + this.ticker + '?modules=assetProfile';
   yahooKeyStatistics = 'https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + this.ticker + '?modules=defaultKeyStatistics'
   yahooV7 = 'https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v7/finance/quote?symbols=' + this.ticker;
   finhubSector = 'https://finnhub.io/api/v1/stock/profile2?symbol=' + this.ticker + '&token=bsn5lqvrh5r9m81doh30';
-
-  // Upadtes Links for the apis
-  updateLinks() {
-    
-  }
-  
-
-  // Competirors tickers
-  competitors = [];
 
   constructor(private data: DataService, public httpClient: HttpClient) { }
 
@@ -48,69 +36,50 @@ export class CompanySearchComponent implements OnInit {
     //this.data.currentTicker.subscribe(ticker => this.ticker = ticker)
     this.data.currentName.subscribe(name => this.name = name)
     this.data.currentSector.subscribe(sector => this.sector = sector)
-    this.data.currentcpe.subscribe(cpe => this.cpe = cpe)
     this.data.currentMarketCap.subscribe(marketCap => this.marketCap = marketCap)
-    this.data.currentEarnings.subscribe(earnings => this.earnings = earnings)
   }
 
   // update the properties in other components
-  newTicker() { this.data.changeTicker(this.ticker); }
-  newName() { this.data.changeName(this.name); }
-  newSector() { this.data.changeSector(this.sector);}
-  newCpe() { this.data.changeCpe(this.cpe);}
-  newMarketCap() { this.data.changeMarketCap(this.marketCap); }
-  newEarnings() { this.data.changeEarnings(this.earnings); }
-  newSpe() { this.data.changeSpe(this.spe); }
+  newTicker() { this.data.changeTicker(this.ticker) }
+  newName() { this.data.changeName(this.name) }
+  newSector() { this.data.changeSector(this.sector) }
+  newMarketCap() { this.data.changeMarketCap(this.marketCap) }
 
   // Global update throughout components
   updateProperties() {
     this.newTicker();
     this.newName();
     this.newSector();
-    this.newCpe();
     this.newMarketCap();
-    this.newEarnings();
-    this.newSpe();
   };
 
   updateTicker(event: any) {
     this.ticker = event.target.value;
     this.newTicker();
-    console.log(this.ticker);
-    console.log(typeof(this.ticker));
     this.yahooProfile = 'https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + this.ticker + '?modules=assetProfile';
-    this.yahooKeyStatistics = 'https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + this.ticker + '?modules=defaultKeyStatistics'
+    this.yahooKeyStatistics = 'https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + this.ticker + '?modules=defaultKeyStatistics';
     this.yahooV7 = 'https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v7/finance/quote?symbols=' + this.ticker;
     
-  }
-
-  checkFunction() {
-    console.log(this.ticker);
-    console.log(this.sector);
-    console.log(this.name);
   }
 
   // 1st request - takes the ticker and receives the data on a given company
   getMainCompanyData() {
     this.httpClient.get(this.yahooV7).subscribe((res) => {
 
-      this.name = res.quoteResponse.result[0].shortName;
-      this.marketCap = res.quoteResponse.result[0].marketCap;
-      this.cpe = res.quoteResponse.result[0].trailingPE;
-      this.cpbv = res.quoteResponse.result[0].priceToBook;
-      this.lastClose = res.quoteResponse.result[0].regularMarketPreviousClose;
-      this.exchange = res.quoteResponse.result[0].fullExchangeName;
+      this.name = (res as any).quoteResponse.result[0].shortName;
+      this.marketCap = (res as any).quoteResponse.result[0].marketCap;
+      this.exchange = (res as any).quoteResponse.result[0].fullExchangeName;
       this.updateProperties();
   
-      console.log('=======================')
-      console.log('1st REQUEST BABY')
-      console.log(`Name = ${this.name}`);
-      console.log(`Company P/E = ${this.cpe}`);
-      console.log(`Market cap = ${this.marketCap}`);
-      console.log(`Price / Book Value = ${this.cpbv}`);
-      console.log(`last close = ${this.lastClose}`);
-      console.log(`Exchange = ${this.exchange}`);
-      console.log('=======================')
+      // console.log('=======================')
+      // console.log('1st REQUEST BABY')
+      // console.log(`Name = ${this.name}`);
+      // console.log(`Company P/E = ${this.cpe}`);
+      // console.log(`Market cap = ${this.marketCap}`);
+      // console.log(`Price / Book Value = ${this.cpbv}`);
+      // console.log(`last close = ${this.lastClose}`);
+      // console.log(`Exchange = ${this.exchange}`);
+      // console.log('=======================')
   
     })
   };
@@ -119,11 +88,9 @@ export class CompanySearchComponent implements OnInit {
   getCompanySector() {
     this.httpClient.get(this.yahooProfile).subscribe((res) => {
 
-      this.sector = res.quoteSummary.result[0].assetProfile.sector;
+      this.sector = (res as any).quoteSummary.result[0].assetProfile.sector;
   
-      console.log(`Sector = ${this.sector}`);
-      console.log('2nd REQUEST BABY')
-      console.log('===============')
+      // console.log(`Sector = ${this.sector}`);
     })
   };
   
@@ -131,11 +98,9 @@ export class CompanySearchComponent implements OnInit {
   getCompanyEV() {
     this.httpClient.get(this.yahooKeyStatistics).subscribe((res) => {
 
-      this.cevebitda = res.quoteSummary.result[0].defaultKeyStatistics.enterpriseToEbitda.fmt;
+      this.cevebitda = (res as any).quoteSummary.result[0].defaultKeyStatistics.enterpriseToEbitda.fmt;
   
-      console.log(`EV/EBITDA = ${this.cevebitda}`);
-      console.log('3rd REQUEST BABY')
-      console.log('================')
+      // console.log(`EV/EBITDA = ${this.cevebitda}`);
     })
   };
   
@@ -150,16 +115,46 @@ export class CompanySearchComponent implements OnInit {
     api_key.apiKey = "bsn5lqvrh5r9m81doh30";
     const finnhubClient = new finnhub.DefaultApi();
 
-    finnhubClient.companyPeers(this.ticker, (error, data, response) => {
+      finnhubClient.companyPeers(this.ticker, (error, data, response) => {
       for (let i = 1; i < 15; i++) {
         if (!data[i]) break;
 
-        this.competitors.push(data[i]);
+        this.competitorsTickers.push(data[i]);
       }
-      console.log('The competitors are: ' + this.competitors);
-      console.log('4th REQUEST BABY')
-      console.log('================')
+
+      console.log(this.competitorsTickers);
+
+      // console.log('The competitors are: ' + this.competitors);
     });
+  }
+
+  //IMPORTANT FUNC
+  getData() {
+
+    let name: string;
+    let evEb: number;
+
+    for (let i = 0; i < this.competitorsTickers.length - 1; i++) {
+
+      this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v7/finance/quote?symbols=' + this.competitorsTickers[i]).subscribe((res) => {
+        name = (res as any).quoteResponse.result[0].shortName
+      })
+      console.log(name);
+
+      this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + this.competitorsTickers[i] + '?modules=defaultKeyStatistics').subscribe((res) => {
+        evEb = (res as any).quoteSummary.result[0].defaultKeyStatistics.enterpriseToEbitda.fmt;
+        console.log(evEb);
+      })
+      console.log(evEb);
+
+      this.competitors.push({
+        ticker: this.competitorsTickers[i],
+        companyName: name,
+        evEbitda: evEb
+      })
+      console.log(this.competitors[i]);
+    }
+    console.log(this.competitors);
   }
 
   // 5th request - get competitors financial data
@@ -169,39 +164,46 @@ export class CompanySearchComponent implements OnInit {
     
     for (let i = 1; i < this.competitors.length; i++) {
       this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v7/finance/quote?symbols=' + this.competitors[i]).subscribe((res) => {
-        shortName = res.quoteResponse.result[0].shortName;
-        console.log(`===============`);
+        shortName = (res as any).quoteResponse.result[0].shortName;
         console.log(shortName);
       })
+
       this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + this.competitors[i] + '?modules=defaultKeyStatistics').subscribe((res) => {
-        evEbitda  = res.quoteSummary.result[0].defaultKeyStatistics.enterpriseToEbitda.fmt;
-        console.log(`EV/EBITDA = ${evEbitda}`);
-        console.log(`===============`);
+        evEbitda  = (res as any).quoteSummary.result[0].defaultKeyStatistics.enterpriseToEbitda.fmt;
+        console.log(evEbitda);
       })
     }  
-
-
-    for (let i = 1; i < this.competitors.length; i++) {
-        
-
-    }
   }
   // FUNCTION THAT EXECUTES all the 5 requests
   globalUpdate() {
 
     this.getMainCompanyData();
+    console.log('1st Function was executed')
+
     setTimeout(() => {
       this.getCompanySector();
-    }, 3000);
+      console.log('2nd Function was executed')
+    }, 2000);
+
     setTimeout(() => {
       this.getCompanyEV();
-    }, 6000);
+      console.log('3rd Function was executed')
+    }, 3000);
+
     setTimeout(() => {
       this.getCompetitorsTickers();
-    }, 8000);
+      console.log('4th Function was executed')
+    }, 4000);
+
     setTimeout(() => {
-      this.getCompetitorsFinancialData();
-    }, 10000);
+      this.getData();
+      console.log('4th Function was executed')
+    }, 7000);
+
+    // setTimeout(() => {
+    //   this.getCompetitorsFinancialData();
+    //   console.log('5th Function was executed')
+    // }, 5000);
     
   }
 
