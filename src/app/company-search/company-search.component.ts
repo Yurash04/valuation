@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders} from '@angular/common/http';
+import { getLocaleDayNames } from '@angular/common';
+import { async } from 'rxjs';
+import { resolve } from 'path';
 
 // import { CompanyGraphComponent } from '../company-graph/company-graph.component'
 
@@ -37,6 +40,7 @@ export class CompanySearchComponent implements OnInit {
     this.data.currentName.subscribe(name => this.name = name)
     this.data.currentSector.subscribe(sector => this.sector = sector)
     this.data.currentMarketCap.subscribe(marketCap => this.marketCap = marketCap)
+    // this.fn().then();
   }
 
   // update the properties in other components
@@ -107,7 +111,7 @@ export class CompanySearchComponent implements OnInit {
 
   // 4th request - get main competitors' tickers
   getCompetitorsTickers() {
-    this.competitors = [];
+    this.competitorsTickers = [];
 
     const finnhub = require('finnhub');
  
@@ -128,24 +132,43 @@ export class CompanySearchComponent implements OnInit {
     });
   }
 
-  //IMPORTANT FUNC
-  getData() {
+  getStockName = (ticker) => {
+    return new Promise(resolve => this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v7/finance/quote?symbols=' + ticker).subscribe((res) => {
+      resolve((res as any).quoteResponse.result[0].shortName )}));
 
-    let name: string;
-    let evEb: number;
+  };
 
-    for (let i = 0; i < this.competitorsTickers.length - 1; i++) {
+  getStockEvEb = (ticker) => {
+    return new Promise(resolve => this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + ticker + '?modules=defaultKeyStatistics').subscribe((res) => {
+      resolve((res as any).quoteSummary.result[0].defaultKeyStatistics.enterpriseToEbitda.fmt)}));
+  };
 
-      this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v7/finance/quote?symbols=' + this.competitorsTickers[i]).subscribe((res) => {
-        name = (res as any).quoteResponse.result[0].shortName
-      })
-      console.log(name);
+  // async fn() {
 
-      this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + this.competitorsTickers[i] + '?modules=defaultKeyStatistics').subscribe((res) => {
-        evEb = (res as any).quoteSummary.result[0].defaultKeyStatistics.enterpriseToEbitda.fmt;
-        console.log(evEb);
-      })
-      console.log(evEb);
+  //   console.log('here begins asyc!')
+  //   const name = await this.getStockName();
+  //   console.log(name);
+  //   console.log('did you see me? :)')
+
+  // }
+
+ 
+  // 5th request - get competitors financial data
+  async getCompsFinancialData() {
+
+    this.competitors = [];
+
+    let name: any;
+    let evEb: any;
+
+    console.log('here begins the async func')
+
+    for (let i = 0; i < this.competitorsTickers.length; i++) {
+
+      name = await this.getStockName(this.competitorsTickers[i]);
+
+      evEb = await this.getStockEvEb(this.competitorsTickers[i]);
+      if (evEb < 0) continue;
 
       this.competitors.push({
         ticker: this.competitorsTickers[i],
@@ -157,23 +180,11 @@ export class CompanySearchComponent implements OnInit {
     console.log(this.competitors);
   }
 
-  // 5th request - get competitors financial data
-  getCompetitorsFinancialData() {
-    let shortName: string;
-    let evEbitda: string;
+  // 6th function - calculates average ev/ebitda in sector
+  calcAverageEvEb() {
     
-    for (let i = 1; i < this.competitors.length; i++) {
-      this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v7/finance/quote?symbols=' + this.competitors[i]).subscribe((res) => {
-        shortName = (res as any).quoteResponse.result[0].shortName;
-        console.log(shortName);
-      })
-
-      this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + this.competitors[i] + '?modules=defaultKeyStatistics').subscribe((res) => {
-        evEbitda  = (res as any).quoteSummary.result[0].defaultKeyStatistics.enterpriseToEbitda.fmt;
-        console.log(evEbitda);
-      })
-    }  
   }
+
   // FUNCTION THAT EXECUTES all the 5 requests
   globalUpdate() {
 
@@ -196,9 +207,9 @@ export class CompanySearchComponent implements OnInit {
     }, 4000);
 
     setTimeout(() => {
-      this.getData();
+      this.getCompsFinancialData();
       console.log('4th Function was executed')
-    }, 7000);
+    }, 5000);
 
     // setTimeout(() => {
     //   this.getCompetitorsFinancialData();
