@@ -21,12 +21,15 @@ export class CompanySearchComponent implements OnInit {
   name: string;
   sector: string;
   exchange: string;
+  ev: number;
   cevebitda: number;
+  ebitda: number;
   marketCap: number;
 
-  // Competirors tickers
+  // Competirors
   competitorsTickers = [];
   competitors: Array<object> = [];
+  averageEvEb: number;
 
   yahooProfile = 'https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + this.ticker + '?modules=assetProfile';
   yahooKeyStatistics = 'https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + this.ticker + '?modules=defaultKeyStatistics'
@@ -36,7 +39,7 @@ export class CompanySearchComponent implements OnInit {
   constructor(private data: DataService, public httpClient: HttpClient) { }
 
   ngOnInit() {
-    //this.data.currentTicker.subscribe(ticker => this.ticker = ticker)
+    this.data.currentTicker.subscribe(ticker => this.ticker = ticker)
     this.data.currentName.subscribe(name => this.name = name)
     this.data.currentSector.subscribe(sector => this.sector = sector)
     this.data.currentMarketCap.subscribe(marketCap => this.marketCap = marketCap)
@@ -75,15 +78,11 @@ export class CompanySearchComponent implements OnInit {
       this.exchange = (res as any).quoteResponse.result[0].fullExchangeName;
       this.updateProperties();
   
-      // console.log('=======================')
-      // console.log('1st REQUEST BABY')
-      // console.log(`Name = ${this.name}`);
-      // console.log(`Company P/E = ${this.cpe}`);
-      // console.log(`Market cap = ${this.marketCap}`);
-      // console.log(`Price / Book Value = ${this.cpbv}`);
-      // console.log(`last close = ${this.lastClose}`);
-      // console.log(`Exchange = ${this.exchange}`);
-      // console.log('=======================')
+      console.log('=======================')
+      console.log(`Name = ${this.name}`);
+      console.log(`Market cap = ${this.marketCap}`);
+      console.log(`Exchange = ${this.exchange}`);
+      console.log('=======================')
   
     })
   };
@@ -92,25 +91,34 @@ export class CompanySearchComponent implements OnInit {
   getCompanySector() {
     this.httpClient.get(this.yahooProfile).subscribe((res) => {
 
+      console.log('=======================')
+
       this.sector = (res as any).quoteSummary.result[0].assetProfile.sector;
   
-      // console.log(`Sector = ${this.sector}`);
+      console.log(`Sector = ${this.sector}`);
+      console.log('=======================')
     })
   };
   
   // 3rd request - returns Enterprise Value of a given company
   getCompanyEV() {
     this.httpClient.get(this.yahooKeyStatistics).subscribe((res) => {
+      console.log('=======================')
 
       this.cevebitda = (res as any).quoteSummary.result[0].defaultKeyStatistics.enterpriseToEbitda.fmt;
+      this.ev = (res as any).quoteSummary.result[0].defaultKeyStatistics.enterpriseValue.raw;
   
-      // console.log(`EV/EBITDA = ${this.cevebitda}`);
+      console.log(`EV = ${this.ev}`);
+      console.log(`EV/EBITDA = ${this.cevebitda}`);
+      console.log('=======================')
     })
   };
   
 
   // 4th request - get main competitors' tickers
   getCompetitorsTickers() {
+    console.log('=======================')
+
     this.competitorsTickers = [];
 
     const finnhub = require('finnhub');
@@ -126,9 +134,9 @@ export class CompanySearchComponent implements OnInit {
         this.competitorsTickers.push(data[i]);
       }
 
-      console.log(this.competitorsTickers);
+      console.log('The competitors are: ' + this.competitorsTickers);
 
-      // console.log('The competitors are: ' + this.competitors);
+      console.log('=======================')
     });
   }
 
@@ -154,7 +162,9 @@ export class CompanySearchComponent implements OnInit {
 
  
   // 5th request - get competitors financial data
+
   async getCompsFinancialData() {
+    console.log('=======================')
 
     this.competitors = [];
 
@@ -177,44 +187,60 @@ export class CompanySearchComponent implements OnInit {
       })
       console.log(this.competitors[i]);
     }
-    console.log(this.competitors);
+    console.log(`The full data on competitors is: ${this.competitors}`);
+
+    console.log('=======================')
   }
 
   // 6th function - calculates average ev/ebitda in sector
+  
   calcAverageEvEb() {
-    
+    console.log('=======================')
+
+    let sum = 0;
+    for (let i = 0; i < this.competitors.length; i++) {
+      sum += parseInt(this.competitors[i]['evEbitda']);
+    }
+    this.averageEvEb = sum / this.competitors.length;
+
+    console.log(`Industry's average EV/EBITDA is ${this.averageEvEb}`);
+
+    console.log('=======================')
   }
 
   // FUNCTION THAT EXECUTES all the 5 requests
   globalUpdate() {
 
-    this.getMainCompanyData();
     console.log('1st Function was executed')
-
+    this.getMainCompanyData();
+    
+    console.log('2nd Function was executed')
     setTimeout(() => {
       this.getCompanySector();
-      console.log('2nd Function was executed')
     }, 2000);
 
+    console.log('3rd Function was executed')
     setTimeout(() => {
       this.getCompanyEV();
-      console.log('3rd Function was executed')
     }, 3000);
 
+    console.log('4th Function was executed')
     setTimeout(() => {
       this.getCompetitorsTickers();
-      console.log('4th Function was executed')
     }, 4000);
 
+    console.log('5th Function was executed')
     setTimeout(() => {
       this.getCompsFinancialData();
-      console.log('4th Function was executed')
     }, 5000);
 
-    // setTimeout(() => {
-    //   this.getCompetitorsFinancialData();
-    //   console.log('5th Function was executed')
-    // }, 5000);
+    console.log('6th Function was executed')
+    setTimeout(() => {
+      this.calcAverageEvEb();
+    }, 12000);
+
+    
+
     
   }
 
