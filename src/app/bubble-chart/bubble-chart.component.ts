@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DoCheck } from '@angular/core';
 import { DataService } from '../data.service';
 import { Chart } from  'node_modules/chart.js';
 import { HttpClient } from '@angular/common/http';
@@ -8,22 +8,29 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './bubble-chart.component.html',
   styleUrls: ['./bubble-chart.component.css']
 })
-export class BubbleChartComponent implements OnInit
+export class BubbleChartComponent implements OnInit, DoCheck
  {
 
   sector: string;
   ticker: string = 'AAPL';
-  name: string;
-  cpe: number;
-  marketCap: number;
-  earnings: number;
-  spe: number;
-  arrObj: Array<object>;
+  obj: object;
+  hasChanged: boolean;
+  sectorsList = [
+    "Financials",
+    "Information Technology", 
+    "Communication Services", 
+    "Consumer Discretionary", 
+    "Consumer Staples",
+    "Energy",
+    "Health Care",
+    "Materials",
+    "Industrials",
+    "Utilities",
+    "Real Estate"
+  ];
   chartData: Array<number> = [];
   chartCounter: number = 0;
-  prevSector: boolean;
-
-  constructor(private data: DataService, public httpClient: HttpClient) { }
+  prevSector: string;
 
   bodyColors: Array<string> = [
     'rgb(157, 209, 251, 0.4)',
@@ -37,7 +44,7 @@ export class BubbleChartComponent implements OnInit
     'rgb(8, 111, 196, 0.4)',
     'rgb(7, 97, 171, 0.3)',
     'rgb(6, 84, 147, 0.3)'
-  ]
+  ];
 
   borderColors: Array<string> = [
     'rgb(157, 209, 251, 1)',
@@ -51,31 +58,17 @@ export class BubbleChartComponent implements OnInit
     'rgb(8, 111, 196, 1)',
     'rgb(7, 97, 171, 1)',
     'rgb(6, 84, 147, 1)'
-  ]
+  ];
 
-  url2 = 'https://script.google.com/macros/s/AKfycbysVaQUXohiHfW18V-mZV8AwYMjfI_E1S7HYyculA7m0A-N0BA/exec';
-
-  newSpe() {
-    this.data.changeSpe(this.spe);
-  }
-
-  sendGetRequest2(){
-    this.httpClient.get(this.url2).subscribe((res)=>{
-      this.arrObj = res['user'];
-      for (let i = 0; i < this.arrObj.length; i++) {
-        this.chartData.push(parseInt(this.arrObj[i]['name']));
-      }
-      this.newSpe();
-    });
-  }
+  constructor(private data: DataService, public httpClient: HttpClient) { }
 
   showChart() {
     let myChart = new Chart('myChart', {
       type: 'bar',
       data: {
-          labels: ['Fin.', 'Ut.', 'Serv.', 'Mater.', 'Energy', 'Ind.', 'Defens.', 'Health', 'R. E.', 'Tech.', 'Cycl.', ],
+          labels: ['Fin.', 'Tech.', 'Commun.', 'Discr', 'Staples', 'Energy', 'Health', 'Mater.', 'Ind.', 'Ut.', 'R. E.',],
           datasets: [{
-              label: 'Average P/E by industry',
+              label: 'Average yield YTD by sector',
               data: this.chartData,
               backgroundColor: this.bodyColors,
               borderColor: this.borderColors,
@@ -91,10 +84,24 @@ export class BubbleChartComponent implements OnInit
               }]
           }
       }
-  });
+    });
+  }
+
+  determineSector() {
+    if (this.prevSector !== this.sector) {
+      for (let i = 0; i < this.sectorsList.length; i++) {
+        if (this.sectorsList[i] === this.sector) {
+          this.chartCounter = i;
+        }
+      } 
+      this.prevSector = this.sector;
+    }
   }
 
   updateChart() {
+
+    this.determineSector();
+
     this.bodyColors = [
       'rgb(157, 209, 251, 0.4)',
       'rgb(133, 197, 250, 0.4)',
@@ -131,6 +138,7 @@ export class BubbleChartComponent implements OnInit
   }
 
   getYields() {
+    var obj = obj;
     var data = null;
 
     var xhr = new XMLHttpRequest();
@@ -138,30 +146,38 @@ export class BubbleChartComponent implements OnInit
 
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === this.DONE) {
-        console.log(this.responseText);
+        obj = JSON.parse(this.responseText)
       }
-});
+    });
 
-xhr.open("GET", "https://alpha-vantage.p.rapidapi.com/query?function=SECTOR");
-xhr.setRequestHeader("x-rapidapi-host", "alpha-vantage.p.rapidapi.com");
-xhr.setRequestHeader("x-rapidapi-key", "72f75c9d27msh668692a47ef8476p1602eejsn860fa5e11005");
+    xhr.open("GET", "https://alpha-vantage.p.rapidapi.com/query?function=SECTOR");
+    xhr.setRequestHeader("x-rapidapi-host", "alpha-vantage.p.rapidapi.com");
+    xhr.setRequestHeader("x-rapidapi-key", "72f75c9d27msh668692a47ef8476p1602eejsn860fa5e11005");
 
-xhr.send(data);
+    xhr.send(data);
+
+    setTimeout(() => {
+      for (let i = 0; i < 11; i++) {
+        let str;
+        str = obj["Rank F: Year-to-Date (YTD) Performance"][this.sectorsList[i]];
+        this.chartData[i] = parseFloat(str);
+      }
+    }, 2000);
+
+    
   }
 
   ngOnInit() {
-    console.log('ng on init was called')
-    this.data.currentTicker.subscribe(ticker => this.ticker = ticker)
-    this.data.currentName.subscribe(name => this.name = name)
     this.data.currentSector.subscribe(sector => this.sector = sector)
-    this.data.currentPrevSector.subscribe(prevSector => this.prevSector = prevSector)
-    this.data.currentcpe.subscribe(cpe => this.cpe = cpe)
-    this.data.currentMarketCap.subscribe(marketCap => this.marketCap = marketCap)
-    this.data.currentEarnings.subscribe(earnings => this.earnings = earnings)
-    this.data.currentspe.subscribe(spe => this.spe = spe)
+    this.getYields();
+    setTimeout(() => {
+      this.showChart();
+    }, 4000);
+  }
 
-    this.sendGetRequest2();
-    this.showChart();
-    // this.getYields();
+  ngDoCheck() {
+    if (this.sector && this.sector !== this.prevSector) {
+      this.updateChart();
+    }
   }
 }

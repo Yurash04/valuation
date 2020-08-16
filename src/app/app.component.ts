@@ -12,13 +12,9 @@ export class AppComponent {
   ticker: string;
   sector: string;
   companyName: string;
-  pe: number;
   marketCap: number;
-  eps: number;
-  shares: number;
-  earnings: number;
   
-  constructor(private data: DataService) {}
+  constructor( private data: DataService ) {}
 
   ngOnInit() {
     this.data.currentTicker.subscribe(ticker => this.ticker = ticker)

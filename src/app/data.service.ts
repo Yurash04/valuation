@@ -7,26 +7,34 @@ export class DataService {
   private tickerSource = new BehaviorSubject<string>('ticker');
   currentTicker = this.tickerSource.asObservable();
 
-  private nameSource = new BehaviorSubject<string>('name');
+  private nameSource = new BehaviorSubject<string>('stock');
   currentName = this.nameSource.asObservable();
 
-  private sectorSource = new BehaviorSubject<string>('sector');
+  private sectorSource = new BehaviorSubject<string>('');
   currentSector = this.sectorSource.asObservable();
 
   private prevSectorSource = new BehaviorSubject<boolean>(false);
   currentPrevSector = this.prevSectorSource.asObservable();
 
-  private cpeSource = new BehaviorSubject<number>(1);
-  currentcpe = this.cpeSource.asObservable();
-
   private marketCapSource = new BehaviorSubject<number>(1);
   currentMarketCap = this.marketCapSource.asObservable();
 
-  private earningsSource = new BehaviorSubject<number>(1);
-  currentEarnings = this.earningsSource.asObservable();
+  private exchangeSource = new BehaviorSubject<string>('exchange');
+  currentExchange = this.exchangeSource.asObservable();
 
-  private speSource = new BehaviorSubject<number>(1);
-  currentspe = this.speSource.asObservable();
+  private evSource = new BehaviorSubject<number>(1);
+  currentEv = this.evSource.asObservable();
+
+  private cEvEbitdaSource = new BehaviorSubject<number>(1);
+  currentCEvEbitda = this.cEvEbitdaSource.asObservable();
+
+  private ebitdaSource = new BehaviorSubject<number>(1);
+  currentEbitda = this.ebitdaSource.asObservable();
+
+  private sEvEbitdaSource = new BehaviorSubject<number>(0);
+  currentSEvEbitda = this.sEvEbitdaSource.asObservable();
+
+
 
   constructor() { }
 
@@ -46,19 +54,28 @@ export class DataService {
     this.prevSectorSource.next(prevSector);
   }
 
-  changeCpe(cpe: number){
-    this.cpeSource.next(cpe);
-  }
-
   changeMarketCap(marketCap: number){
     this.marketCapSource.next(marketCap);
   }
 
-  changeEarnings(e: number){
-    this.earningsSource.next(e);
+  changeExchange(exchange: string){
+    this.exchangeSource.next(exchange);
   }
 
-  changeSpe(spe: number){
-    this.speSource.next(spe);
+  changeEv(ev: number){
+    this.evSource.next(ev);
   }
+
+  changeEvEbitda(evEbitda: number){
+    this.cEvEbitdaSource.next(evEbitda);
+  }
+
+  changeEbitda(ebitda: number){
+    this.ebitdaSource.next(ebitda);
+  }
+
+  changeSEvEbitda(sEvEbitda: number){
+    this.sEvEbitdaSource.next(sEvEbitda);
+  }
+
 }

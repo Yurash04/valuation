@@ -25,8 +25,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BubbleChartComponent,
     IndustryChartComponent,
     HeaderComponent,
-    // MatIconModule
-    // DataService
   ],
   imports: [
     BrowserModule,

@@ -21,28 +21,24 @@ export class IndustryChartComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-      new TradingView.widget(
-      {
-      "container_id": "sector-chart",
-      "autosize": true,
-      // "width": 580,
-      // "height": 190,
-      "symbol": "CURRENCYCOM:US500",
-      "interval": "D",
-      "timezone": "Etc/UTC",
-      "theme": "light",
-      "style": "3",
-      "locale": "en",
-      "toolbar_bg": "#f1f3f6",
-      "enable_publishing": false,
-      "hide_top_toolbar": true,
-      "hide_legend": true,
-      "allow_symbol_change": true,
-      });
-
-}
+    new TradingView.widget(
+        {
+        "container_id": "sector-chart",
+        "autosize": true,
+        "symbol": "CURRENCYCOM:US500",
+        "interval": "D",
+        "timezone": "Etc/UTC",
+        "theme": "light",
+        "style": "3",
+        "locale": "en",
+        "toolbar_bg": "#f1f3f6",
+        "enable_publishing": false,
+        "hide_top_toolbar": true,
+        "hide_legend": true,
+        "allow_symbol_change": true,
+        });
+  }
 
   
-
 
 }
