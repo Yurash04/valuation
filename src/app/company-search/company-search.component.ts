@@ -169,14 +169,14 @@ export class CompanySearchComponent implements OnInit {
     });
   }
 
-  getStockName = (ticker) => {
-    return new Promise(resolve => this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v7/finance/quote?symbols=' + ticker).subscribe((res) => {
+  async getStockName(ticker: string) {
+    return await new Promise(resolve => this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v7/finance/quote?symbols=' + ticker).subscribe((res) => {
       resolve((res as any).quoteResponse.result[0].shortName )}));
 
   };
 
-  getStockEvEb = (ticker) => {
-    return new Promise(resolve => this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + ticker + '?modules=defaultKeyStatistics').subscribe((res) => {
+  async getStockEvEb(ticker: string) {
+    return await new Promise(resolve => this.httpClient.get('https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v10/finance/quoteSummary/' + ticker + '?modules=defaultKeyStatistics').subscribe((res) => {
       resolve((res as any).quoteSummary.result[0].defaultKeyStatistics.enterpriseToEbitda.fmt)}));
   };
 
@@ -193,18 +193,20 @@ export class CompanySearchComponent implements OnInit {
   // 5th request - get competitors financial data
 
   async getCompsFinancialData() {
+    console.log('WE ARE IN geTtinG data!')
 
     this.competitors = [];
 
     let name: any;
     let evEb: any;
 
-    for (let i = 0; i < this.competitorsTickers.length; i++) {
+    for (let i = 0; i < this.competitorsTickers.length - 1; i++) {
 
       name = await this.getStockName(this.competitorsTickers[i]);
 
       evEb = await this.getStockEvEb(this.competitorsTickers[i]);
-      if (evEb < 0) continue;
+      console.log(evEb);
+      // if (evEb < 0) continue;
 
       this.competitors.push({
         ticker: this.competitorsTickers[i],
@@ -213,55 +215,40 @@ export class CompanySearchComponent implements OnInit {
       })
       console.log(this.competitors[i]);
     }
+    this.calcAverageEvEb();
   }
 
   // 6th function - calculates average ev/ebitda in sector
   calcAverageEvEb() {
+    console.log('BEGAN AVERAGE')
 
     let sum = 0;
+    let iSum = 0;
     for (let i = 0; i < this.competitors.length; i++) {
-      sum += parseInt(this.competitors[i]['evEbitda']);
+      if (parseInt(this.competitors[i]['evEbitda']) > 0) {
+        sum += parseInt(this.competitors[i]['evEbitda']);
+        iSum++;
+        console.log(sum);
+      };
     }
-    this.sevebitda = sum / this.competitors.length;
+    this.sevebitda = sum / iSum;
 
     this.newSEvEbitda();
+
+    console.log('FINISHED AVERAGE')
+    console.log(this.competitors);
   }
 
   // FUNCTION THAT EXECUTES all the 5 requests
   globalUpdate() {
-    console.log(this.ticker);
 
-    console.log('1st Function was executed')
     this.getMainCompanyData();
-    
+    this.getCompanySector();
+    this.getCompanyEV();
+    this.getCompetitorsTickers();
     setTimeout(() => {
-      console.log('2nd Function was executed')
-      this.getCompanySector();
-    }, 1000);
-
-    
-    setTimeout(() => {
-      console.log('3rd Function was executed')
-      this.getCompanyEV();
-    }, 1500);
-
-    
-    setTimeout(() => {
-      console.log('4th Function was executed')
-      this.getCompetitorsTickers();
-    }, 2000);
-
-    
-    setTimeout(() => {
-      console.log('5th Function was executed')
       this.getCompsFinancialData();
-    }, 3500);
-
-    
-    setTimeout(() => {
-      console.log('6th Function was executed')
-      this.calcAverageEvEb();
-    }, 6000);
+    }, 700)
     
   }
 }
