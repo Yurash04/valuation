@@ -68,7 +68,7 @@ export class CompanyDataComponent implements OnInit, DoCheck {
   calcFairValue() {
     this.fairValue = Math.round(this.ebitda * this.sevebitda / 1000000);
     this.fairValueShow = this.fairValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    this.difference = (this.ev / 1000000) - this.fairValue;
+    this.difference = Math.round((this.ev / 1000000) - this.fairValue);
     this.differenceShow = this.difference.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
   }
 
